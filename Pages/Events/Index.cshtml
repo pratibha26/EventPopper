@@ -1,0 +1,126 @@
+@page
+@model EventPopper.Pages.Events.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].EventDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].EventTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].TotalSeats)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].AvailableSeats)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].HostName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].NumberOfTickets)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].TicketPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].EventImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].Latitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].Longitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].RegistrationDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Event) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalSeats)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AvailableSeats)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HostName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberOfTickets)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventImageUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Latitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Longitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegistrationDate)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

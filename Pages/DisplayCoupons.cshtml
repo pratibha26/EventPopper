@@ -1,0 +1,106 @@
+﻿@page
+@model IndexModel
+@{
+}
+
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+body {
+    background-image: url("https://image.shutterstock.com/z/stock-vector-bright-colorful-vector-confetti-isolated-on-white-background-549294556.jpg");
+}
+
+td, th {
+    border: 1px;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-image: linear-gradient(to right, rgb(57,255,20,0), rgb(57,255,20,1));
+    color:black;
+}
+tr:nth-child(odd) {
+    background-image: linear-gradient(to right, rgba(0,128,255,0), rgba(0,128,255,1));;
+}
+
+.title {
+    font-size: xx-large;
+    text-align: left;
+    margin-left: 10%;
+    color: black;
+    font-family: sans-serif;
+}
+
+.leftalign {
+    float: left;
+    margin-left: 10%;
+    font-size: large;
+    padding-left: 10px;
+    color: black;
+}
+.rightalign {
+    float: right;
+    margin-right: 50%
+    font-family: cursive;
+    padding-right: 50px;
+    color: black;
+}
+a:hover {
+    background-color: yellow;
+}
+</style>
+
+<h1>Grab Coupons</h1>
+<br/>
+<table id="couponlist">
+</table>
+
+@section Scripts {
+    <script>
+     var eventid;    
+        // WHEN DOCUMENT READY
+        $(function() {  
+            var eventid = getUrlVars()["eventid"];
+            alert("number - "+eventid);           
+            loadData(); 
+        });
+        function getUrlVars() {
+            var vars = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                vars[key] = value;
+            });
+            return vars;
+        }
+        
+        function loadData() {
+            $.ajax({
+                url: "/api/coupons",
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'GET'
+            }).done(function(responseJSON,status,xhr) {
+                // process the response when status code is 200-299
+                buildCouponList(responseJSON);
+            }).fail(function(xhr,status,error) {
+                // deal with error from server (status code 400-599)
+                alert("There was an error retrieving the data");
+            });
+        }
+        
+        function buildCouponList(coupons) {
+            $("#couponlist").empty();
+            $.each(coupons, function (index, item) {
+                if(item.eventId==eventid)
+                {
+                var row = $('<tr coupon-id="' + item.id + '">'+ '<td><div class=title>' + item.couponCategory + ' </div><div class=row><span class=leftalign><strong>' + item.couponName + '</strong></span><span class = rightalign>Discount -'+item.discount+'%</span></div>'+'<div class=row><span class=leftalign>Coupon Code - ' + item.couponName + '</span><span class = rightalign>Validity - '+ item.validity + '</span></div></td></tr>'); 
+                $("#couponlist").append(row); 
+                }
+            });        
+            }
+    </script>
+}
+

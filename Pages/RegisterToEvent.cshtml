@@ -1,0 +1,246 @@
+﻿
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+body {
+    background-image: url("https://i.pinimg.com/originals/1c/60/c7/1c60c745991ae1e5a0b4e97f1bcb6ac1.jpg");
+}
+
+td, th {
+    border: 1px;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-image: linear-gradient(to right, rgba(255,255,0,0), rgba(255,255,0,1));
+    color:black;
+}
+tr:nth-child(odd) {
+    background-image: linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1));;
+}
+.a_image {
+    float: left;
+    
+
+}
+.a_image img {
+width:360px;
+height:266px;
+}
+
+.title {
+    font-size: xx-large;
+    text-align: left;
+    margin-left: 10%;
+    color: black;
+    font-family: sans-serif;
+}
+
+.datetime {
+    text-align: left;
+    padding: 10px;
+}
+
+.totalseats {
+    text-align: right;
+    padding: 10px;
+    font-size: small;
+}
+.venue {
+    text-align: right;
+    padding: 10px;
+    font-size: small;
+}
+.leftalign {
+    float: left;
+    margin-left: 10%;
+    font-size: large;
+    padding-left: 10px;
+    color: black;
+}
+.rightalign {
+    float: right;
+    margin-right: 50%
+    font-family: cursive;
+    padding-right: 50px;
+    color: black;
+}
+a:hover {
+    background-color: yellow;
+}
+#duplicate { 
+    float: none;
+    display: table-cell;
+    vertical-align: bottom;
+}
+.comment-name {
+    width: 160%;
+    margin: 10%;
+}
+.commentlabel{
+ margin-left: 10%;
+ font-weight: bold;
+}
+.create-save{
+margin-left:10%; 
+}
+</style>
+<h1>Upcoming Events</h1>
+<br/>
+<table id="eventlist">
+</table>
+
+@section Scripts {
+    <script>
+     var eventid;    
+        // WHEN DOCUMENT READY
+        $(function() {
+           
+            loadData();
+
+            $("#eventlist").on('click', 'a.event-register', function() {
+                var id = $(this).parents("tr").attr('event-id');
+                registerEvent(id);
+                return false;
+            });
+            $("#eventlist").on('click', 'a.comment-add', function() {
+                eventid= $(this).parents("tr").attr('event-id');
+                $(this).parents("tr").find('.comment-form').toggle(); 
+                return false;
+               
+            });
+            $("#eventlist").on('click', 'button.coupon-grab', function() {
+                eventid= $(this).parents("tr").attr('event-id');
+                window.location="http://localhost:5000/DisplayCoupons?eventid="+eventid;
+            });
+
+            $("#eventlist").on('click', 'button.create-cancel', function() {
+                $(".comment-form").hide();
+                $("#duplicate").remove();
+                return false;
+            });
+            $("#eventlist").on('click', 'button.create-save', function() {
+                  var id = eventid;
+                  var commentText = $(this).parents("tr").find('.comment-form .comment-name').val();
+                createComment(id,commentText,function() {
+                    $(".comment-form").hide();
+                    });
+                return false;
+            });
+ 
+
+                                  
+        });
+        
+        function loadData() {
+            $.ajax({
+                url: "/api/events",
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'GET'
+            }).done(function(responseJSON,status,xhr) {
+                // process the response when status code is 200-299
+                buildEventList(responseJSON);
+            }).fail(function(xhr,status,error) {
+                // deal with error from server (status code 400-599)
+                alert("There was an error retrieving the data");
+            });
+        }
+        
+        function buildEventList(events) {
+            $("#eventlist").empty();
+            var today = (new Date()).toString();
+            
+            $.each(events, function (index, item) {
+                if(Date.parse(item.eventDate)>=Date.parse(today)){
+                    if(item.availableSeats>0){
+                        if (item.isRegistered) {
+                            if(item.coupons.length<=0)
+                            {
+                                var row = $('<tr event-id="' + item.id + '">'+ '<td width="50%"><div class = a_image><img src = "' + item.eventImageUrl + '"></div></td><td><div class=title>' + item.name + ' </div><div class=row><span class=leftalign><strong>' + item.type + '</strong></span><span class = rightalign>Rating -'+item.rating+'</span></div>'+'<div class=row><span class=leftalign>Date - ' + new Date(item.eventDate).toLocaleDateString() + '</span><span class = rightalign>Available Seats - '+ item.availableSeats + '</span></div><div class=row><span class=leftalign>Time - '+ new Date(item.eventDate).toLocaleTimeString() + '</span><span class=rightalign>Ticket Price -'+item.ticketPrice+'$</span></div><div class=row><span class=leftalign>Venue - '+item.location + '</span><span class=rightalign>Discount - '+item.discount+'%</span></div><div class=row><span class=leftalign><strong>Registered</strong></span><span class=rightalign><a href="#" class="pull-center comment-add"><strong><u>Add Comments</u></strong></a></span></div><div class=row><span class=leftalign><button class="btn btn-primary  coupon-grab">Grab Coupon</button></span></div><div id="duplicate" style="display: none;" class="row comment-form"> <form id="createCommentForm"><div><h4 class="commentlabel">Add your comment</h4><div class="form-group"><input type="text" class="form-control comment-name" id="commentText" placeholder="Enter your comment" /></div></div><div><button class="btn btn-primary create-save">Add</button> <button class="btn btn-default create-cancel">Cancel</button></div></form></div></td></tr>');
+                            }
+                            else
+                            {
+                                var row = $('<tr event-id="' + item.id + '">'+ '<td width="50%"><div class = a_image><img src = "' + item.eventImageUrl + '"></div></td><td><div class=title>' + item.name + ' </div><div class=row><span class=leftalign><strong>' + item.type + '</strong></span><span class = rightalign>Rating -'+item.rating+'</span></div>'+'<div class=row><span class=leftalign>Date - ' + new Date(item.eventDate).toLocaleDateString() + '</span><span class = rightalign>Available Seats - '+ item.availableSeats + '</span></div><div class=row><span class=leftalign>Time - '+ new Date(item.eventDate).toLocaleTimeString() + '</span><span class=rightalign>Ticket Price -'+item.ticketPrice+'$</span></div><div class=row><span class=leftalign>Venue - '+item.location + '</span><span class=rightalign>Discount - '+item.discount+'%</span></div><div class=row><span class=leftalign><strong>Registered</strong></span><span class=rightalign><a href="#" class="pull-center comment-add"><strong><u>Add Comments</u></strong></a></span></div><div id="duplicate" style="display: none;" class="row comment-form"> <form id="createCommentForm"><div><h4 class="commentlabel">Add your comment</h4><div class="form-group"><input type="text" class="form-control comment-name" id="commentText" placeholder="Enter your comment" /></div></div><div><button class="btn btn-primary create-save">Add</button> <button class="btn btn-default create-cancel">Cancel</button></div></form></div></td></tr>'); 
+                            }
+                        }
+                        else
+                        {
+                            var row = $('<tr event-id="' + item.id + '">'+ '<td width="50%"><div class = a_image><img src = "' + item.eventImageUrl + '"></div></td><td><div class=title>' + item.name + ' </div><div class=row><span class=leftalign><strong>' + item.type + '</strong></span><span class = rightalign>Rating -'+item.rating+'</span></div>'+'<div class=row><span class=leftalign>Date - ' + new Date(item.eventDate).toLocaleDateString() + '</span><span class = rightalign>Available Seats - '+ item.availableSeats + '</span></div><div class=row><span class=leftalign>Time - '+ new Date(item.eventDate).toLocaleTimeString() + '</span><span class=rightalign>Ticket Price -'+item.ticketPrice+'$</span></div><div class=row><span class=leftalign>Venue - '+item.location + '</span><span class=rightalign>Discount - '+item.discount+'%</span></div><div class=row><span class=leftalign><a href="#" class="pull-center event-register"><strong><u>Register</u></strong></a></span><span class=rightalign><a href="#" class="pull-center comment-add"><strong><u>Add Comments</u></strong></a></span></div><div id="duplicate" style="display: none;" class="row comment-form"> <form id="createCommentForm"><div><h4 class="commentlabel">Add your comment</h4><div class="form-group"><input type="text" class="form-control comment-name" id="commentText" placeholder="Enter your comment" /></div></div><div><button class="btn btn-primary create-save">Add</button> <button class="btn btn-default create-cancel">Cancel</button></div></form></div></td></tr>');
+                        }
+                    } else {
+                         if (item.isRegistered) {
+                            var row = $('<tr event-id="' + item.id + '">'+ '<td width="50%"><div class = a_image><img src = "' + item.eventImageUrl + '"></div></td><td><div class=title>' + item.name + ' </div><div class=row><span class=leftalign><strong>' + item.type + '</strong></span><span class = rightalign>Rating -'+item.rating+'</span></div>'+'<div class=row><span class=leftalign>Date - ' + new Date(item.eventDate).toLocaleDateString() + '</span><span class = rightalign>Available Seats - '+ item.availableSeats + '</span></div><div class=row><span class=leftalign>Time - '+ new Date(item.eventDate).toLocaleTimeString() + '</span><span class=rightalign>Ticket Price -'+item.ticketPrice+'$</span></div><div class=row><span class=leftalign>Venue - '+item.location + '</span><span class=rightalign>Discount - '+item.discount+'%</span></div><div class=row><span class=leftalign><strong>Registered</strong></span><span class=rightalign><a href="#" class="pull-center comment-add"><strong><u>Add Comments</u></strong></a></span></div><div id="duplicate" style="display: none;" class="row comment-form"> <form id="createCommentForm"><div><h4 class="commentlabel">Add your comment</h4><div class="form-group"><input type="text" class="form-control comment-name" id="commentText" placeholder="Enter your comment" /></div></div><div><button class="btn btn-primary create-save">Add</button> <button class="btn btn-default create-cancel">Cancel</button></div></form></div></td></tr>'); 
+                        }
+                        else
+                        {
+                            var row = $('<tr event-id="' + item.id + '">'+ '<td width="50%"><div class = a_image><img src = "' + item.eventImageUrl + '"></div></td><td><div class=title>' + item.name + ' </div><div class=row><span class=leftalign><strong>' + item.type + '</strong></span><span class = rightalign>Rating -'+item.rating+'</span></div>'+'<div class=row><span class=leftalign>Date - ' + new Date(item.eventDate).toLocaleDateString() + '</span><span class = rightalign>Available Seats - '+ item.availableSeats + '</span></div><div class=row><span class=leftalign>Time - '+ new Date(item.eventDate).toLocaleTimeString() + '</span><span class=rightalign>Ticket Price -'+item.ticketPrice+'$</span></div><div class=row><span class=leftalign>Venue - '+item.location + '</span><span class=rightalign>Discount - '+item.discount+'%</span></div><div class=row><span class=leftalign></span><span class=rightalign><a href="#" class="pull-center comment-add"><strong><u>Add Comments</u></strong></a></span></div><div id="duplicate" style="display: none;" class="row comment-form"> <form id="createCommentForm"><div><h4 class="commentlabel">Add your comment</h4><div class="form-group"><input type="text" class="form-control comment-name" id="commentText" placeholder="Enter your comment" /></div></div><div><button class="btn btn-primary create-save">Add</button> <button class="btn btn-default create-cancel">Cancel</button></div></form></div></td></tr>');
+                        }
+
+                    }
+                }
+          //  var commentForm = $('<div id="duplicate" style="display: none;" class="row comment-form"> <form id="createCommentForm">');
+           // var commentInput = $('<div class="col-sm-8"><h4>Add new comment</h4><div class="form-group"><label for="commentText">Your Comment</label><input type="text" class="form-control comment-name" id="commentText" placeholder="CommentText" /></div></div>');
+            //var commentbutton = $('<div class="col-sm-4"><button class="btn btn-primary create-save">Add</button> <button class="btn btn-default create-cancel">Cancel</button></div></form></div>');
+
+            //$(commentForm).append(commentInput);
+           // $(commentForm).append(commentbutton);
+            
+           // $(row).append(commentForm);
+            $("#eventlist").append(row); 
+            });
+            
+
+            }
+
+        function registerEvent(id) {
+            $.ajax({
+                url: 'http://localhost:5000/api/events/register/' + id,
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'PUT',
+            }).done(function(responseData, status, xhr) {
+                loadData();
+            }).fail(function(xhr, status, error) {
+                alert("There was an error registering the event");
+            });
+        }
+
+        function createComment(id,commentText,callback) {
+            var requestData = {
+            commentText: commentText,
+            commentBy:"Anonymous",
+            commentDateTime:new Date(),
+            eventId:id
+
+            };
+            $.ajax({
+                url: 'http://localhost:5000/api/comments',
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'POST',
+                data: JSON.stringify(requestData)
+            }).done(function(responseData, status, xhr) {
+                loadData();
+                if (callback) {
+                    callback();
+                }
+            }).fail(function(xhr, status, error) {
+                alert("There was an error saving the comment");
+            });
+        }
+
+
+
+
+    </script>
+}

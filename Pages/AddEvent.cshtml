@@ -1,0 +1,169 @@
+﻿
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+<h1>Upcoming Events</h1>
+<div id="createevent"><a href="#" class="pull-left event-create"><strong><h3><u>Create Event</u></h3></strong></a><br/><br/></div>
+<br/>
+<table id="eventlist">
+</table>
+<br/><h1>Archieved Events</h1>
+<table id="archievedeventlist">
+</table>
+
+@section Scripts {
+    <script>
+        
+        // WHEN DOCUMENT READY
+        $(function() {
+            loadData();
+            $("#createevent").on('click', 'a.event-create', function() {
+                $(".create-form").toggle();
+                return false;
+            }); 
+
+            $("#createevent").on('click', 'button.create-cancel', function() {
+                $(".create-form").hide();
+                return false;
+            });
+            $("#createevent").on('click', 'button.create-save', function() {
+                addEvent(function() {
+                    $(".create-form").hide();
+                    });
+                    $("#duplicate").remove();
+                return false;
+            });
+            
+            $("#eventlist").on('click', 'a.event-delete', function() {
+                var id = $(this).parents("tr").attr('event-id');
+                deleteEvent(id);
+                return false;
+            });
+
+            $("#archievedeventlist").on('click', 'a.event-delete', function() {
+                var id = $(this).parents("tr").attr('event-id');
+                deleteEvent(id);
+                return false;
+            });
+
+            
+                      
+        });
+        
+        function loadData() {
+            $.ajax({
+                url: "/api/events",
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'GET'
+            }).done(function(responseJSON,status,xhr) {
+                // process the response when status code is 200-299
+                buildEventList(responseJSON);
+            }).fail(function(xhr,status,error) {
+                // deal with error from server (status code 400-599)
+                alert("There was an error retrieving the data");
+            });
+        }
+        
+        function buildEventList(events) {
+            $("#eventlist").empty();
+            $("#archievedeventlist").empty();
+            var today = (new Date()).toString();
+            
+            //var today = new Date();
+            $("#eventlist").append('<tr><th>Event Name</th><th>Event Type</th><th>Event Date</th><th>Event Time</th></th><th>Total Seats</th><th>Host Name</th><th>Location</th><th>Ticket Price</th><th>Discount</th><th>Rating</th><th>Event Image URL</th><th>Latitude</th><th>Longitude</th><th></th></tr>');
+            $("#archievedeventlist").append('<tr><th>Event Name</th><th>Event Type</th><th>Event Date</th><th>Event Time</th></th><th>Total Seats</th><th>Host Name</th><th>Location</th><th>Ticket Price</th><th>Discount</th><th>Rating</th><th>Event Image URL</th><th>Latitude</th><th>Longitude</th><th></th></tr>');
+            $.each(events, function (index, item) {
+                var x = item.eventDate;
+                var recordedDate = new Date(x);
+                //alert(recordeDate);
+                //alert(item.eventDate.toString().substr(0,3));
+                //alert("please1"+recordedDate.getDate);
+                //alert("please2"+today.getDate);
+                if(Date.parse(item.eventDate)>=Date.parse(today)){
+                    var row = $('<tr event-id="' + item.id + '">'+'<td>' + item.name + ' </td><td> ' + item.type + '</td>'+'<td>' + item.eventDate + '</td><td>'+ item.eventTime + '</td>'+ '</td><td>'+ item.totalSeats + '</td><td>'+item.hostName + '</td><td>'+item.location+'</td><td>'+item.ticketPrice+'</td><td>'+item.discount+'</td><td>'+item.rating+'</td><td>'+item.eventImageUrl+'</td><td>'+item.latitude+'</td><td>'+item.longitude+'</td><td><a href="#" class="pull-right event-delete">delete</a></td></tr>');
+                    $("#eventlist").append(row);    
+                }
+                else{
+                    var row = $('<tr event-id="' + item.id + '">'+'<td>' + item.name + ' </td><td> ' + item.type + '</td>'+'<td>' + item.eventDate + '</td><td>'+ item.eventTime + '</td>'+ '</td><td>'+ item.totalSeats + '</td><td>'+item.hostName + '</td><td>'+item.location+'</td><td>'+item.ticketPrice+'</td><td>'+item.discount+'</td><td>'+item.rating+'</td><td>'+item.eventImageUrl+'</td><td>'+item.latitude+'</td><td>'+item.longitude+'</td><td><a href="#" class="pull-right event-delete">delete</a></td></tr>');
+                    $("#archievedeventlist").append(row); 
+                }
+            });
+
+            var createForm = $('<div id="duplicate" style="display: none;"  class="row create-form"> <form id="createEventForm">');
+            var createInput = $('<div class="col-sm-8"><h4>Add new event</h4><div class="form-group"><label for="name">Name</label><input type="text" class="form-control" id="name" placeholder="Name" /></div><div class="form-group"><label for="type">Event Type</label><input type="text" class="form-control" id="type" placeholder="Type" /></div>		<div class="form-group"><label for="type">Event Date</label><input type="date" class="form-control" id="eventdate" placeholder="EventDate" /></div><div class="form-group"><label for="type">Event Time</label><input type="date" class="form-control" id="eventtime" placeholder="EventTime" /></div><div class="form-group"><label for="type">Total Seats</label><input type="text" class="form-control" id="totalseats" placeholder="TotalSeats" /></div><div class="form-group"><label for="type">Host Name</label><input type="text" class="form-control" id="hostname" placeholder="HostName" /></div><div class="form-group"><label for="type">Location</label><input type="text" class="form-control" id="location" placeholder="Location" /></div><div class="form-group"><label for="type">Ticket Price</label><input type="text" class="form-control" id="ticketprice" placeholder="TicketPrice" /></div><div class="form-group"><label for="type">Discount</label><input type="text" class="form-control" id="discount" placeholder="Discount" /></div><div class="form-group"><label for="type">Rating</label><input type="text" class="form-control" id="rating" placeholder="Rating" /></div><div class="form-group"><label for="type">Event Image URL</label><input type="text" class="form-control" id="eventimageurl" placeholder="EventImageUrl" /></div><div class="form-group"><label for="type">Latitude</label><input type="text" class="form-control" id="latitude" placeholder="Latitude" /></div><div class="form-group"><label for="type">Longitude</label><input type="text" class="form-control" id="longitude" placeholder="Longitude" /></div></div>');
+            var createbutton = $('<div class="col-sm-4"><button class="btn btn-primary create-save">Add</button> <button class="btn btn-default create-cancel">Cancel</button></div></form></div>');
+
+            $(createForm).append(createInput);
+            $(createForm).append(createbutton);
+            $("#createevent").append(createForm);
+            }
+
+        function addEvent(callback) {
+            var requestData = {
+                name: $("#name").val(),
+                type: $("#type").val(),
+                eventdate: $("#eventdate").val(),
+                eventTime: $("#eventtime").val(),
+                totalSeats: $("#totalseats").val(),
+                hostName: $("#hostname").val(),
+                location: $("#location").val(),
+                ticketPrice: $("#ticketprice").val(),
+                discount: $("#discount").val(),
+                rating: $("#rating").val(),
+                eventImageUrl: $("#eventimageurl").val(),
+                latitude: $("#latitude").val(),
+                longitude: $("#longitude").val(),
+            };
+            $.ajax({
+                url: 'http://localhost:5000/api/events',
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'POST',
+                data: JSON.stringify(requestData)
+            }).done(function(responseData, status, xhr) {
+                loadData();
+                if (callback) {
+                    callback();
+                }
+            }).fail(function(xhr, status, error) {
+                alert("There was an error saving the event");
+            });
+        }
+
+        function deleteEvent(id) {
+            $.ajax({
+                url: 'http://localhost:5000/api/events/' + id,
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'DELETE',
+            }).done(function(responseData, status, xhr) {
+                loadData();                
+            }).fail(function(xhr, status, error) {
+                alert("There was an error deleting the event");
+            });
+        }
+
+
+
+    </script>
+}

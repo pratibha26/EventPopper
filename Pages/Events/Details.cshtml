@@ -1,0 +1,115 @@
+@page
+@model EventPopper.Pages.Events.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.EventDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EventDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.EventTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EventTime)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Type)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Type)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.TotalSeats)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.TotalSeats)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.AvailableSeats)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.AvailableSeats)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.HostName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.HostName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Location)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Location)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.NumberOfTickets)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.NumberOfTickets)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.TicketPrice)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.TicketPrice)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Discount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Discount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Rating)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Rating)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.EventImageUrl)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EventImageUrl)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Latitude)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Latitude)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Longitude)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Longitude)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.RegistrationDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.RegistrationDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Event.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

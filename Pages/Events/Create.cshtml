@@ -1,0 +1,109 @@
+@page
+@model EventPopper.Pages.Events.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Event</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Event.Name" class="control-label"></label>
+                <input asp-for="Event.Name" class="form-control" />
+                <span asp-validation-for="Event.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.EventDate" class="control-label"></label>
+                <input asp-for="Event.EventDate" class="form-control" />
+                <span asp-validation-for="Event.EventDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.EventTime" class="control-label"></label>
+                <input asp-for="Event.EventTime" class="form-control" />
+                <span asp-validation-for="Event.EventTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.Type" class="control-label"></label>
+                <input asp-for="Event.Type" class="form-control" />
+                <span asp-validation-for="Event.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.TotalSeats" class="control-label"></label>
+                <input asp-for="Event.TotalSeats" class="form-control" />
+                <span asp-validation-for="Event.TotalSeats" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.AvailableSeats" class="control-label"></label>
+                <input asp-for="Event.AvailableSeats" class="form-control" />
+                <span asp-validation-for="Event.AvailableSeats" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.HostName" class="control-label"></label>
+                <input asp-for="Event.HostName" class="form-control" />
+                <span asp-validation-for="Event.HostName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.Location" class="control-label"></label>
+                <input asp-for="Event.Location" class="form-control" />
+                <span asp-validation-for="Event.Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.NumberOfTickets" class="control-label"></label>
+                <input asp-for="Event.NumberOfTickets" class="form-control" />
+                <span asp-validation-for="Event.NumberOfTickets" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.TicketPrice" class="control-label"></label>
+                <input asp-for="Event.TicketPrice" class="form-control" />
+                <span asp-validation-for="Event.TicketPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.Discount" class="control-label"></label>
+                <input asp-for="Event.Discount" class="form-control" />
+                <span asp-validation-for="Event.Discount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.Rating" class="control-label"></label>
+                <input asp-for="Event.Rating" class="form-control" />
+                <span asp-validation-for="Event.Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.EventImageUrl" class="control-label"></label>
+                <input asp-for="Event.EventImageUrl" class="form-control" />
+                <span asp-validation-for="Event.EventImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.Latitude" class="control-label"></label>
+                <input asp-for="Event.Latitude" class="form-control" />
+                <span asp-validation-for="Event.Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.Longitude" class="control-label"></label>
+                <input asp-for="Event.Longitude" class="form-control" />
+                <span asp-validation-for="Event.Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.RegistrationDate" class="control-label"></label>
+                <input asp-for="Event.RegistrationDate" class="form-control" />
+                <span asp-validation-for="Event.RegistrationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

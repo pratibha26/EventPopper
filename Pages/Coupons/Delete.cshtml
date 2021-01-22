@@ -1,0 +1,52 @@
+@page
+@model EventPopper.Pages.Coupons.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Coupon</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Coupon.CouponName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Coupon.CouponName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Coupon.CouponCategory)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Coupon.CouponCategory)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Coupon.Validity)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Coupon.Validity)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Coupon.Discount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Coupon.Discount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Coupon.Event)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Coupon.Event.Id)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Coupon.Id" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>
